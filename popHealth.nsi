@@ -196,20 +196,24 @@ Section "Install Ruby" sec_ruby
   SectionIn 1 3                  ; enabled in Full and Custom installs
   AddSize 18534                  ; additional size in kB above installer
 
+  ;Check if ruby exists
+  IfFileExists "$rubydir\bin\ruby.exe" 0 installruby
+  
+  ;Ruby was found
+  MessageBox MB_ICONQUESTION|MB_YESNO "A current ruby installation was found.  Do you want to install it again?$\n$\n\
+      Current install location: $0" /SD IDNO IDNO rubydone
+  
+  ;Ruby not found
+  installruby:	
   SetOutPath $INSTDIR\depinstallers ; temporary directory
 
   MessageBox MB_ICONINFORMATION|MB_OKCANCEL 'We will now install Ruby.  On the optional tasks dialog, select \
       "Add Ruby executables to your PATH"; and "Associate .rb files with this Ruby installation" boxes.' /SD IDOK \
-      IDCANCEL skipruby
+      IDCANCEL rubydone
     File "rubyinstaller-1.9.2-p290.exe"
     ExecWait '"$INSTDIR\depinstallers\rubyinstaller-1.9.2-p290.exe"'
     Delete "$INSTDIR\depinstallers\rubyinstaller-1.9.2-p290.exe"
-  skipruby:
-
-  ; We need a ruby install.  If we don't find ruby where we expect, ask user
-  IfFileExists "$rubydir\bin\ruby.exe" rubydone 0
-    ; TODO Need to prompt the user to tell us where ruby is installed.
-    MessageBox MB_ICONEXCLAMATION|MB_OK "Ruby not found!"
+    
   rubydone:
   Push "$rubydir\bin"
   Call AddToPath
@@ -679,6 +683,10 @@ FunctionEnd
 ; needed variables
 Function .onInit
   StrCpy $rubydir "C:\Ruby192"
+  ReadRegStr $0 HKLM "software\Wow6432Node\RubyInstaller\MRI\1.9.2" "InstallLocation"	
+  StrCmp $0 "" +2
+  StrCpy $rubydir $0
+  
   StrCpy $mongodir "C:\mongodb-2.0.1"
   StrCpy $redisdir "C:\redis-2.4.0"
 FunctionEnd
