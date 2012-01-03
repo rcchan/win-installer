@@ -337,7 +337,11 @@ Section "Install MongoDB" sec_mongodb
 
   SetOutPath "C:\mongodb-2.0.1"
 
-  File /r mongodb-2.0.1\*.*
+  !if ${BUILDARCH} = 32
+    File /r mongodb-win32-i386-2.0.1\*
+  !else
+    File /r mongodb-win32-x86_64-2.0.1\*
+  !endif
 
   ; Create a data directory for mongodb
   SetOutPath c:\data\db

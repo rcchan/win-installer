@@ -89,18 +89,20 @@ if "%myarch%"=="32" (
   REM Delete the redis 64bit tree
   rd /s /q %redisdir%\64bit
 
-  REM Unzip 32bit mongodb
-  "%unzipcmd%" .\mongodb-win32-i386-2.0.1.zip
-  ren mongodb-win32-i386-2.0.1 %mongodbdir%
+  REM Unzip 32bit mongodb if not exist
+  if not exist mongodb-win32-i386-2.0.1 (
+	"%unzipcmd%" .\mongodb-win32-i386-2.0.1.zip
+  )
 ) else (
   echo doing 64bit specific stuff...
 
   REM Delete the redis 32bit tree
   rd /s /q %redisdir%\32bit
  
-  REM Unzip 64bit mongodb
-  "%unzipcmd%" .\mongodb-win32-x86_64-2.0.1.zip
-  ren mongodb-win32-x86_64-2.0.1 %mongodbdir%
+  REM Unzip 64bit mongodb if not exist
+  if not exist mongodb-win32-x86_64-2.0.1 (
+    "%unzipcmd%" .\mongodb-win32-x86_64-2.0.1.zip
+  )
 )
 
 REM Run makensis to build installer
