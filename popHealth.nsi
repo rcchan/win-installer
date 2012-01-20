@@ -338,7 +338,7 @@ Section "Install Redis" sec_redis
   Call CreateTask
   pop $0
   DetailPrint "Result of scheduling Redis Server task: $0"
-  SetRebootFlag true
+  Exec 'SCHTASKS /RUN /TN "popHealth Redis Server"'
 SectionEnd
 
 ;-----------------------------------------------------------------------------
@@ -383,7 +383,7 @@ Section "popHealth Web Application" sec_popHealth
   Call CreateTask
   pop $0
   DetailPrint "Result of scheduling Web Server task: $0"
-  SetRebootFlag true
+  Exec 'SCHTASKS /RUN /TN "popHealth Web Server"'
 SectionEnd
 
 ;-----------------------------------------------------------------------------
@@ -414,7 +414,7 @@ Section "Install resque workers" sec_resque
   Call CreateTask
   pop $0
   DetailPrint "Result of scheduling resque workers task: $0"
-  SetRebootFlag true
+  Exec 'SCHTASKS /RUN /TN "popHealth Resque Workers"'
 SectionEnd
 
 ;-----------------------------------------------------------------------------
